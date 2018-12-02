@@ -11,6 +11,12 @@ public class AbilityState : MonoBehaviour {
 	public Color NormalState = Color.green; 
 	public Color OverdrivenState = Color.yellow;
 	public Color CrippledState = Color.red;
+
+	public Image Button;
+
+	public Sprite NormalSprite;
+	public Sprite InProgressSprite;
+	public Sprite UnAvailableSprite;
 	
 	// Update is called once per frame
 	void Update () {
@@ -22,11 +28,19 @@ public class AbilityState : MonoBehaviour {
 		
 		OverdriveState state = Target.GetState();
 		if(state == OverdriveState.Available)
+		{
 			SliderFill.color = NormalState;
+			Button.sprite = NormalSprite;
+		}
 		else if(state == OverdriveState.InProgress)
+		{
 			SliderFill.color = OverdrivenState;
-		else if(state == OverdriveState.Unavailable){ 
+			Button.sprite = InProgressSprite;
+		}
+		else if(state == OverdriveState.Unavailable)
+		{ 
 			SliderFill.color = CrippledState; 
+			Button.sprite = UnAvailableSprite; 
 			Level.value = 0;
 		}
 		

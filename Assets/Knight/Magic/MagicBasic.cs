@@ -25,6 +25,10 @@ public class MagicBasic : MonoBehaviour {
 		
 	}
 
+	private void OnDestroy() {
+		_Controller.OnFire -= _OnFire;
+	}
+
 	private void Update() {		
 		if(_TimeFromLastCast > CastTimeout)
 		{
