@@ -12,9 +12,3 @@ public enum OverdriveMode
 	Level
 }
 
-public enum ParametersMode
-{
-	Normal,
-	Overdrive,
-	Crippled
-}

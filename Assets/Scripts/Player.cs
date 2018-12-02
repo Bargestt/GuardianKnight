@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : Killable {
 
 	[SerializeField]
 	private Ability _MovementAbility;
-
 	[SerializeField]
 	private Ability _SwordAbility;
 
 	public Animator Animation;
-
 	
 
 	[SerializeField]
@@ -20,21 +18,41 @@ public class Player : MonoBehaviour {
 	private Rigidbody2D _Rb;
 	public SpriteRenderer SpriteRenderer;
 
+	private PlayerController _Controller;
+
 	public bool LookingRight{ get; private set;}
  
 	private void Awake() {
-		_Rb = GetComponent<Rigidbody2D>();		
+		_Rb = GetComponent<Rigidbody2D>();	
+		_Controller = FindObjectOfType<PlayerController>();
+		_Controller.OnMoveRight += Flip;
 	}
 	
 	// Update is called once per frame
 	void Update () { 
 		Animation.SetBool("OnGround", !_IsInAir);		
-		Animation.SetBool("Walking", _Rb.velocity.x != 0);
+		Animation.SetBool("Walking", _Rb.velocity.x != 0);			
+	}
 
-		if(_Rb.velocity.x < -0.1f) LookingRight = true; 
-		if(_Rb.velocity.x > 0.1f) LookingRight = false;		
+	private void Flip(float scale)
+	{
+		if(scale < -0.1f) LookingRight = true; 
+		if(scale > 0.1f) LookingRight = false;	
 
-		SpriteRenderer.flipX = 	LookingRight;
+		transform.eulerAngles = new Vector3(0, LookingRight?180:0, 0);	
+	}
+
+	protected override void OnDie()
+	{
+		foreach(Transform tr in transform)
+		{
+			tr.gameObject.SetActive(false);			
+		}	
+
+		Animation.gameObject.SetActive(true);
+		Animation.SetTrigger("Dead");
+		_Controller.OnMoveRight -= Flip;
+		Destroy(gameObject, 1f);
 	}
 
 
@@ -42,7 +60,7 @@ public class Player : MonoBehaviour {
 	public bool IsInAir(){
 		return _IsInAir;
 	}
-
+	
 	private void OnCollisionEnter2D(Collision2D other) {
 		if(other.gameObject.CompareTag("Ground"))
 			_IsInAir = false;
