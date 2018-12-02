@@ -54,6 +54,11 @@ public class Ability : MonoBehaviour {
 	{
 		return _CurrentLevel;
 	}
+	public int GetCurrentIndex()
+	{
+		return _currentIndex;
+	}
+
 	public Overdrivable CurrentLevel
 	{
 		get{ return _CurrentLevel; }

@@ -74,4 +74,9 @@ public class AbilityOverdrivable : Ability {
 		yield return new WaitForSecondsRealtime(OverdriveDuration);
 		_EndOverdrive();
 	}
+
+	public OverdriveState GetState()
+	{
+		return _State;
+	}
 }
