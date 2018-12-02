@@ -78,6 +78,7 @@ public class Enemy : Killable {
 		_Exploded = true;
 		GetComponent<Collider2D>().enabled = false;	
 		_Rb.simulated = false;
+		
 
 		Destroy(gameObject, DestroyDelay);
 	}

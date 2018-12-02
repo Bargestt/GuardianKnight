@@ -11,6 +11,9 @@ public class MovementJump : MovementBasic {
 
 		_Controller.OnJump += _Jump;
 	}
+	private void OnDestroy() {
+		_Controller.OnJump -= _Jump; 
+	}
 
 	protected virtual void _Jump()
 	{		

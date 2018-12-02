@@ -7,14 +7,19 @@ public class PlayerController : MonoBehaviour {
 	public delegate void MoveUp(float scale);
 	public delegate void Jump();
 	public delegate void Fire(int type);
+	public delegate void Overdive(OverdriveType type);
 
 	public MoveRight OnMoveRight;
 	public MoveUp OnMoveUp;
 	public Jump OnJump;
 	public Fire OnFire;
 
+	public Overdive OnOverdrive;
+
 	public float HorizontalScale = 1;
 	public float VerticalScale = 1;
+
+
 
 	// Use this for initialization
 	void Start () {
@@ -37,11 +42,25 @@ public class PlayerController : MonoBehaviour {
 
 		if( Input.GetAxis("Fire1")  != 0 )
 		{
-			if(OnFire != null) OnFire(0);			
+			if(OnFire != null) OnFire(0);			 
 		}	
 		if( Input.GetAxis("Fire2")  != 0 )
 		{
 			if(OnFire != null) OnFire(1);			
+		}	
+
+
+		if( Input.GetAxis("OverdriveMove")  != 0 )
+		{
+			if(OnOverdrive != null) OnOverdrive(OverdriveType.Movement);			
+		}	
+		if( Input.GetAxis("OverdriveSword")  != 0 )
+		{
+			if(OnOverdrive != null) OnOverdrive(OverdriveType.Sword);			
+		}	
+		if( Input.GetAxis("OverdriveMagic")  != 0 )
+		{
+			if(OnOverdrive != null) OnOverdrive(OverdriveType.Sword);			
 		}	
 	}
 }

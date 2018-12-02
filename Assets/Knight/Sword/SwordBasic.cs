@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class SwordBasic : Overdrivable {
 
-	public float SlashDamage = 100;
+	public float SlashDamage = 30;
 	public float SlashTimeout = 0.5f;
 	public float SlashDuration = 0.2f;
 	
@@ -14,6 +14,7 @@ public class SwordBasic : Overdrivable {
 	protected Player _Player;
 
 
+	private float _CurSlashDamage;
 	private bool _SlashInProgress = false;
 	private float _TimeFromLastSlash;
 	private BoxCollider2D _Collider;
@@ -80,7 +81,8 @@ public class SwordBasic : Overdrivable {
 	}	
 	protected virtual void _SlashStart()
 	{
-		_Player.Animation.SetTrigger("Slash");		
+		_Player.Animation.SetTrigger("Slash");
+		_CurSlashDamage = SlashDamage;		
 
 		Collider2D[] points = new Collider2D[10];		
 		int size = _Collider.OverlapCollider(_Filter, points);
@@ -96,11 +98,16 @@ public class SwordBasic : Overdrivable {
 
 	protected void _ApplyDamage(GameObject target)
 	{
+		if(_CurSlashDamage == 0){
+			_SlashEnd();
+			return;
+		}
+
 		var k  = target.GetComponent<Killable>();
 		if(k != null)
 		{
-			k.ApplyDamage(SlashDamage);
-		}		
+			_CurSlashDamage = k.ApplyDamage(_CurSlashDamage);			
+		}
 	}
 
 

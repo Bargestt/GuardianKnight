@@ -9,10 +9,12 @@ public class FireBallScript : MonoBehaviour {
 	public float DestroyDelay = 0.3f;
 	public ExplosionScript Explosion;
 	
+	public bool IgnorePlayer = true;
 
+	
 	private Rigidbody2D _Rb;
 	private SpriteRenderer _SpriteRend;
-
+	
 	private void Awake() {	
 		_Rb = GetComponent<Rigidbody2D>();
 		_SpriteRend = GetComponent<SpriteRenderer>();
@@ -41,12 +43,14 @@ public class FireBallScript : MonoBehaviour {
 	}	
 
 	private void OnCollisionEnter2D(Collision2D other) {
-		if(other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Item"))
-		{
-			Physics2D.IgnoreCollision(other.collider, other.otherCollider);
-			return;
+		if(IgnorePlayer){
+			if(other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Item"))
+			{
+				Physics2D.IgnoreCollision(other.collider, other.otherCollider);
+				return;
+			}
 		}
-
+		
 		float angle = Vector2.SignedAngle(Vector2.right,  other.GetContact(0).normal) - 90;		
 		_Rb.rotation = angle;
 		

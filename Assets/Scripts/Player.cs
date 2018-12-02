@@ -5,9 +5,9 @@ using UnityEngine;
 public class Player : Killable {
 
 	[SerializeField]
-	private Ability _MovementAbility;
+	private AbilityOverdrivable _MovementAbility;
 	[SerializeField]
-	private Ability _SwordAbility;
+	private AbilityOverdrivable _SwordAbility;
 
 	public Animator Animation;
 	
@@ -25,7 +25,8 @@ public class Player : Killable {
 	private void Awake() {
 		_Rb = GetComponent<Rigidbody2D>();	
 		_Controller = FindObjectOfType<PlayerController>();
-		_Controller.OnMoveRight += Flip;
+		_Controller.OnMoveRight += _Flip;
+		_Controller.OnOverdrive += _EnableOverdrive;
 	}
 	
 	// Update is called once per frame
@@ -34,12 +35,21 @@ public class Player : Killable {
 		Animation.SetBool("Walking", _Rb.velocity.x != 0);			
 	}
 
-	private void Flip(float scale)
+	private void _Flip(float scale)
 	{
 		if(scale < -0.1f) LookingRight = true; 
 		if(scale > 0.1f) LookingRight = false;	
 
 		transform.eulerAngles = new Vector3(0, LookingRight?180:0, 0);	
+	}
+
+	private void _EnableOverdrive(OverdriveType type)
+	{		
+		if(type == OverdriveType.Movement) 
+			_MovementAbility.StartOverdrive();
+		else if(type == OverdriveType.Sword) 
+			_SwordAbility.StartOverdrive();
+		//else if(type == OverdriveType.Magic) 		
 	}
 
 	protected override void OnDie()
@@ -51,7 +61,10 @@ public class Player : Killable {
 
 		Animation.gameObject.SetActive(true);
 		Animation.SetTrigger("Dead");
-		_Controller.OnMoveRight -= Flip;
+
+		_Controller.OnMoveRight -= _Flip;
+		_Controller.OnOverdrive -= _EnableOverdrive;
+
 		Destroy(gameObject, 1f);
 	}
 
